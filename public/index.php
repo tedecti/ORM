@@ -65,7 +65,7 @@ class Model
 
     public function getById($id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = $id";
+        $sql = "SELECT firstname, lastname FROM {$this->table} WHERE id = $id";
         $result = $this->db->query($sql);
 
         if ($result->num_rows > 0) {
@@ -77,10 +77,13 @@ class Model
 
     public function register()
     {
-        $sql = "INSERT INTO users (firstname, lastname, phone, email, password) VALUES ('$firstname', '$lastname', '$phone', '$email', '$password')";;
+        $firstname = $_POST['firstname'];
+        $lastname = $_POST['lastname'];
+        $phone = $_POST['phone'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $sql = "INSERT INTO users (firstname, lastname, phone, email, password) WHERE NOT EXISTS VALUES ('$firstname', '$lastname', '$phone', '$email', '$password')";;
         $result = $this->db->query($sql);
-
-        
     }
 }
 
@@ -98,9 +101,38 @@ class User extends Model
         return $this->getById($id);
     }
 }
-$user = new User();
+$getUser = new User();
 // $users = $user->getAllUsers();
 // var_dump($users);
+$userById = $getUser->getUserById(1);
 
-$userById = $user->getUserById(1);
-var_dump($userById);
+foreach ($userById as $user) {
+    echo "$user <br>";
+}
+
+if (isset($_POST)) {
+    $getUser->register();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form method="post">
+        <input type="text" name="firstname">
+        <input type="text" name="lastname">
+        <input type="number" name="phone">
+        <input type="email" name="email">
+        <input type="password" name="password">
+        <button type="submit">Отправить</button>
+    </form>
+</body>
+
+</html>
