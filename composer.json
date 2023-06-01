@@ -3,6 +3,5 @@
     "type": "composer-plugin",
     "autoload": {
         "psr-4": {"Src\\": "src/"}
-    },
-    "require": {}
+    }
 }
