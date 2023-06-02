@@ -1,21 +1,25 @@
 <?php
+require_once '../vendor/autoload.php';
 
-require_once 'vendor\autoload.php';
+$routes = [
+    '/ORM/public/' => 'index',
+    '/ORM/public/register' => 'register',
+    '/ORM/public/login' => 'login'
+];
 
-use Src\Controllers\User;
+$requestUri = $_SERVER['REQUEST_URI'];
 
-if ($_POST) {
-    $getUser = new User();
-    // $users = $user->getAllUsers();
-    // var_dump($users);
-    $userById = $getUser->getUserById(2);
-
-    foreach ($userById as $user) {
-        echo "$user <br>";
-    }
-    $getUser->register();
+$requestUri = strtok($requestUri, '?');
+if (array_key_exists($requestUri, $routes)) {
+    $controller = $routes[$requestUri];
+    
+    require_once($controller . '.php');
+} else {
+    echo 'Error 404: Page not found';
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,20 +31,7 @@ if ($_POST) {
 </head>
 
 <body>
-    <form method="post">
-        <label for="firstname">Имя</label><br>
-        <input type="text" name="firstname"><br>
-        <label for="lastname">Фамилия</label><br>
-        <input type="text" name="lastname"><br>
-        <label for="phone">Номер телефона</label><br>
-        <input type="number" name="phone"><br>
-        <label for="email">Почта</label><br>
-        <input type="email" name="email"><br>
-        <label for="password">Пароль</label><br>
-        <input type="password" name="password"><br>
-        <button type="submit">Отправить</button><br><br>
-    </form>
+
 </body>
 
-</html>
 </html>

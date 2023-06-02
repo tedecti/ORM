@@ -1,23 +1,19 @@
 <?php
-
-use Src\Controllers\User;
+error_reporting(0);
 
 require_once '../vendor/autoload.php';
 
+use App\Controllers\UserController;
+
 if ($_POST) {
-    $getUser = new User();
-    // $users = $user->getAllUsers();
-    // var_dump($users);
-    // $userById = $getUser->getUserById(2);
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $getUser = new UserController();
+    $getUser->login($email, $password);
+    $getUser->sendToken($email);
 
-    // foreach ($userById as $user) {
-    //     echo "$user <br>";
-    // }
-    $emailLogin = $_POST['emailLogin'];
-    $passwordLogin = $_POST['passwordLogin'];
-    $getUser->login($emailLogin, $passwordLogin);
+    // $getUser->resetPassword(782259, '12456'); 
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,9 +21,9 @@ if ($_POST) {
 <body>
     <form method="post">
         <label for="email">Почта</label><br>
-        <input type="email" name="emailLogin"><br>
+        <input type="email" name="email"><br>
         <label for="password">Пароль</label><br>
-        <input type="password" name="passwordLogin"><br>
+        <input type="password" name="password"><br>
         <button type="submit">Отправить</button><br>
     </form>
 </body>

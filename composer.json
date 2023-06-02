@@ -2,6 +2,11 @@
     "name": "vendor/orm",
     "type": "composer-plugin",
     "autoload": {
-        "psr-4": {"Src\\": "src/"}
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "require": {
+        "swiftmailer/swiftmailer": "^6.3"
     }
 }
