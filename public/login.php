@@ -5,14 +5,11 @@ require_once '../vendor/autoload.php';
 
 use App\Controllers\UserController;
 
+$email = $_POST['email'];
+$password = $_POST['password'];
 if ($_POST) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
     $getUser = new UserController();
     $getUser->login($email, $password);
-    $getUser->sendToken($email);
-
-    // $getUser->resetPassword(782259, '12456'); 
 }
 ?>
 <!DOCTYPE html>
@@ -24,7 +21,7 @@ if ($_POST) {
         <input type="email" name="email"><br>
         <label for="password">Пароль</label><br>
         <input type="password" name="password"><br>
-        <button type="submit">Отправить</button><br>
+        <button type="submit">Отправить</a></button><br>
     </form>
 </body>
 

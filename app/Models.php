@@ -30,7 +30,7 @@ class Models
 
         return [];
     }
-    
+
     public function getUserById($id)
     {
         $sql = "SELECT firstname, lastname FROM {$this->table} WHERE id = $id";
@@ -45,7 +45,10 @@ class Models
 
     public function getAllPosts()
     {
-        $sql = "SELECT * FROM {$this->table}";
+        $sql = "SELECT u.`firstname`, p.`title`, p.`description`, p.`image`
+        FROM posts p
+        JOIN users u ON p.`user_id` = u.`id`
+        ";
         $result = $this->db->query($sql);
 
         if ($result->num_rows > 0) {
@@ -55,13 +58,12 @@ class Models
             }
             return $data;
         }
-
         return [];
     }
 
     public function getPostById($id)
     {
-        $sql = "SELECT title, description, image FROM {$this->table} WHERE id = $id";
+        $sql = "SELECT title, description, image FROM posts WHERE id = $id";
         $result = $this->db->query($sql);
 
         if ($result->num_rows > 0) {
@@ -71,4 +73,8 @@ class Models
         return null;
     }
 
+    public function getEmail($id)
+    {
+        return $sql = "SELECT email FROM users WHERE id=$id";
+    }
 }

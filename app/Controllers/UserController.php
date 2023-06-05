@@ -25,7 +25,7 @@ class UserController extends Models
 
     public function getToken($email)
     {
-        $sql = "SELECT `token` FROM {$this->table} WHERE email = '$email'";
+        $sql = "SELECT token FROM {$this->table} WHERE email = '$email'"; 
         $result = $this->db->query($sql);
         $array = $result->fetch_assoc();
         $token = $array['token'];
@@ -39,6 +39,7 @@ class UserController extends Models
         $phone = $_POST['phone'];
         $email = $_POST['email'];
         $password = $_POST['password'];
+        $password = password_hash($password, PASSWORD_BCRYPT);
         $token = $this->token;
         $token = $this->setToken();
         $sql = "INSERT INTO {$this->table} (firstname, lastname, phone, email, password, token) VALUES ('$firstname', '$lastname', '$phone', '$email', '$password', '$token')";
@@ -47,21 +48,19 @@ class UserController extends Models
 
     public function login($email, $password)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE email = '$email' AND password = '$password'";
+        $sql = "SELECT * FROM users WHERE email = '$email'";
         $result = $this->db->query($sql);
         $user = $result->fetch_assoc();
-        $_SESSION['id'] = $user['id'];
-        $_SESSION['firstname'] = $user['firstname'];
-        $_SESSION['lastname'] = $user['lastname'];
-        $_SESSION['email'] = $user['email'];
-        $_SESSION['phone'] = $user['phone'];
+        if($user!=null && password_verify($password, $user['password'])){
+            setcookie('id', $user['id']);
+            setcookie('email', $user['email']);
+        }
     }
 
     public function setToken()
     {
         $this->token = null;
         $this->token = rand(100000, 999999);
-        var_dump($this->token);
         $unique = false;
 
         while (!$unique) {
@@ -86,7 +85,7 @@ class UserController extends Models
         $mailer = new Swift_Mailer($transport);
         $message = (new Swift_Message('noreply'))
             ->setFrom(['test_crocos@mail.ru' => 'noreply'])
-            ->setTo(['janadwear86@gmail.com' => 'user']);
+            ->setTo(["$email" => 'user']);
         $html = "<p>$token</p>";
         $message->setBody($html, 'text/html');
         $result = $mailer->send($message);
@@ -101,9 +100,8 @@ class UserController extends Models
     public function resetPassword($token, $newPassword)
     {
         $new_token = $this->setToken();
+        $newPassword = password_hash($newPassword, PASSWORD_BCRYPT);
         $sql = "UPDATE {$this->table} SET `password` = '$newPassword', `token` = $new_token WHERE `token` = $token";
         $result = $this->db->query($sql);
-        var_dump($this->token);
-        echo $sql;
     }
 }
